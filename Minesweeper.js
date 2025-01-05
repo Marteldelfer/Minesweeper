@@ -1,6 +1,6 @@
-N_BOMBS = 40;
-HEIGHT = 14;
-WIDTH = 18;
+const N_BOMBS = 40;
+const HEIGHT = 14;
+const WIDTH = 18;
 
 function numberize(a, b, board) {
     let bombs_arround = 0;
@@ -33,7 +33,7 @@ function generateBombs() {
     return bombs;
 }
 
-function generateBoard() {
+function generateBackBoard() {
     let board = [];
     const bombs = generateBombs();
     for (let i = 0; i < HEIGHT; i++) {
@@ -52,5 +52,52 @@ function generateBoard() {
     }
     return board;
 }
+function generateFrontBoard() {
+    let board = [];
+    for (let i = 0; i < HEIGHT; i++) {
+        let line = [];
+        for (let j = 0; j < WIDTH; j++) {
+            line.push(".");
+        }
+        board.push(line);
+    }
+    return board;
+}
 
-console.table(generateBoard());
+function dig(a, b, backBoard, frontBoard) {
+    if (a < 0 || b < 0 || a >= HEIGHT || b >= WIDTH) {
+        return;
+    }
+    if (frontBoard[a][b] !== ".") {
+        return;
+    }
+    frontBoard[a][b] = backBoard[a][b];
+
+    if (backBoard[a][b] === "0") {
+        for (let i = a - 1; i < a + 2; i++) {
+            for (let j = b - 1; j < b + 2; j++) {
+                dig(i, j, backBoard, frontBoard)
+            }
+        }
+    }
+}
+
+function createHTML(frontBoard) {
+    for (let i = 0; i < HEIGHT; i++) {
+        const row = document.createElement('div')
+        row.setAttribute('id', 'row' + i)
+        for (let j = 0; j < WIDTH; j++) {
+            const block = document.createElement("div");
+            block.setAttribute('id', 'block' + i + '-' + j)
+            block.setAttribute('class', 'block')
+            block.textContent = frontBoard[i][j]
+            row.appendChild(block)
+        }
+        document.body.appendChild(row)
+    }
+}
+
+let backBoard = generateBackBoard();
+let frontBoard = generateFrontBoard();
+
+createHTML(frontBoard)
