@@ -80,20 +80,30 @@ function dig(a, b, backBoard, frontBoard) {
             }
         }
     }
+    let main = document.getElementsByTagName('main')[0];
+    main.innerHTML = "";
+    console.log('AAOAO')
+    createHTML(frontBoard);
 }
 
 function createHTML(frontBoard) {
+
+    let main = document.body.getElementsByTagName('main')[0];
+
     for (let i = 0; i < HEIGHT; i++) {
         const row = document.createElement('div')
         row.setAttribute('id', 'row' + i)
         for (let j = 0; j < WIDTH; j++) {
             const block = document.createElement("div");
-            block.setAttribute('id', 'block' + i + '-' + j)
-            block.setAttribute('class', 'block')
-            block.textContent = frontBoard[i][j]
-            row.appendChild(block)
+            block.setAttribute('id', 'block' + i + '-' + j);
+            block.setAttribute('class', 'block');
+            block.textContent = frontBoard[i][j];
+            block.addEventListener('click', function() {
+                dig(i, j, backBoard, frontBoard);
+            });
+            row.appendChild(block);
         }
-        document.body.appendChild(row)
+        main.appendChild(row);
     }
 }
 
